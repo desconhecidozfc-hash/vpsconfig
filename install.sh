@@ -53,20 +53,15 @@ fi
 echo -e "${GREEN}✓ Sistema detectado: $PRETTY_NAME${NC}"
 echo ""
 
-# Pedir configurações
-echo -e "${YELLOW}📝 Configuração${NC}"
+# Configurações automáticas (não precisa input do usuário)
+API_PORT=4387
+DEPLOY_SECRET=$(openssl rand -hex 32)
+DOMAIN=""
+
+echo -e "${YELLOW}📝 Configuração automática${NC}"
 echo "---------------"
-
-read -p "Porta da API (padrão: 4387): " API_PORT
-API_PORT=${API_PORT:-4387}
-
-# Gerar chave secreta aleatória
-DEFAULT_SECRET=$(openssl rand -hex 32)
-read -p "Chave secreta (Enter para gerar automaticamente): " DEPLOY_SECRET
-DEPLOY_SECRET=${DEPLOY_SECRET:-$DEFAULT_SECRET}
-
-read -p "Seu domínio (opcional, para SSL): " DOMAIN
-
+echo -e "   Porta: ${CYAN}$API_PORT${NC}"
+echo -e "   Chave: ${CYAN}(gerada automaticamente)${NC}"
 echo ""
 echo -e "${BLUE}[1/7] Atualizando sistema...${NC}"
 apt-get update -qq
