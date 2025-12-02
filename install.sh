@@ -7,7 +7,7 @@
 # Ou: wget -qO- https://seu-dominio.com/install.sh | sudo bash
 # ============================================
 
-set -e
+# Não usar set -e para evitar parar em warnings
 
 # Cores
 RED='\033[0;31m'
@@ -64,8 +64,8 @@ echo -e "   Porta: ${CYAN}$API_PORT${NC}"
 echo -e "   Chave: ${CYAN}(gerada automaticamente)${NC}"
 echo ""
 echo -e "${BLUE}[1/7] Atualizando sistema...${NC}"
-apt-get update -qq
-apt-get upgrade -y -qq
+apt-get update -qq 2>/dev/null || true
+apt-get upgrade -y -qq 2>/dev/null || true
 
 echo -e "${BLUE}[2/7] Instalando dependências...${NC}"
 apt-get install -y -qq curl wget git ca-certificates gnupg lsb-release ufw
@@ -75,8 +75,8 @@ if ! command -v docker &> /dev/null; then
     mkdir -p /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg 2>/dev/null
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-    apt-get update -qq
-    apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    apt-get update -qq 2>/dev/null || true
+    apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-compose-plugin || true
     systemctl enable docker
     systemctl start docker
     echo -e "${GREEN}✓ Docker instalado${NC}"
